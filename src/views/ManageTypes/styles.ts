@@ -75,6 +75,10 @@ const Wrapper = styled.div`
   .delBtn:hover {
     background: red;
   }
+
+  .errorStyle {
+    border: 1px solid red !important;
+  }
 `;
 
 export default Wrapper;

@@ -51,10 +51,7 @@ const Navbar = ({ showNavbar, setShowNavbar }: NavbarProps) => {
             {inventories
               ?.filter((x: any) => x.name !== '')
               ?.map((data: any) => (
-                <li
-                  onClick={() => navigate(`/${data?.id}`)}
-                  key={Math.random()}
-                >
+                <li onClick={() => navigate(`/${data?.id}`)} key={data?.id}>
                   {data?.name}
                 </li>
               ))}

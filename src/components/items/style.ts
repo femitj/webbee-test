@@ -38,7 +38,7 @@ const Wrapper = styled.div`
     border: none !important;
   }
   .btn {
-    background: blue;
+    background: #a3a3a3;
     border-radius: 6px;
   }
   .btnClass {

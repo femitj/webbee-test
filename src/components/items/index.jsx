@@ -8,6 +8,7 @@ const Item = ({ item, category, items }) => {
   const dispatch = useDispatch();
   const setData = (val) => dispatch(setItems(val));
   const handleDelete = (id) => setData(items?.filter((x) => x?.id !== id));
+
   return (
     <Wrapper>
       <div className='header'>
@@ -20,9 +21,9 @@ const Item = ({ item, category, items }) => {
         </div>
       </div>
       <>
-        {category?.fields?.map((cat) =>
+        {category?.fields?.map((cat, index) =>
           cat?.type === 'text' ? (
-            <div className='inputCont' key={Math.random()}>
+            <div className='inputCont' key={index}>
               <Input
                 label={cat?.label}
                 type='text'
@@ -41,7 +42,7 @@ const Item = ({ item, category, items }) => {
               />
             </div>
           ) : cat?.type === 'check' ? (
-            <div className='inputCont' key={Math.random()}>
+            <div className='inputCont' key={index}>
               <CheckInput
                 label={cat?.label}
                 checked={item[[cat?.label?.replace(/ /g, '')]]}
@@ -63,7 +64,7 @@ const Item = ({ item, category, items }) => {
               />
             </div>
           ) : cat?.type === 'date' ? (
-            <div className='inputCont' key={Math.random()}>
+            <div className='inputCont' key={index}>
               <Input
                 label={cat?.label}
                 type='date'
@@ -82,7 +83,7 @@ const Item = ({ item, category, items }) => {
               />
             </div>
           ) : (
-            <div className='inputCont' key={Math.random()}>
+            <div className='inputCont' key={index}>
               <Input
                 label={cat?.label}
                 type='number'

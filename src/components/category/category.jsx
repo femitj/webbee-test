@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Input, { SelectInput } from '../input';
 
 const Category = ({ setData, data, val, index }) => {
-  // alert(index);
+  const [errorObj, setErrorObj] = useState({});
+
   const handleNew = (val, newVal) => {
     const newArray = data.map((item) =>
       item.id === val?.id
@@ -23,6 +24,18 @@ const Category = ({ setData, data, val, index }) => {
     setData(newArray);
   };
   const handleDelete = (id) => setData(data?.filter((x) => x?.id !== id));
+
+  const handleRemoveField = (val, x) => {
+    const newArray = data.map((item) =>
+      item.id === val?.id
+        ? {
+            ...val,
+            fields: [...val?.fields.filter((y) => y?.id !== x?.id)],
+          }
+        : item
+    );
+    setData(newArray);
+  };
 
   return (
     <div key={val?.id} className='form'>
@@ -59,10 +72,27 @@ const Category = ({ setData, data, val, index }) => {
           getValue='label'
         />
       </div>
-      {val?.fields?.map((x) => (
-        <div key={Math.random()} className='inputCont'>
+      {val?.fields?.map((x, index) => (
+        <div key={index} className='inputCont'>
           <Input
             value={x?.label}
+            onBlur={(e) => {
+              return val?.fields.map((z) => {
+                if (
+                  z?.id !== x?.id &&
+                  z?.label === e.target.value &&
+                  z?.type === x?.type
+                ) {
+                  setErrorObj({ id: x?.id });
+                  return setTimeout(() => {
+                    setErrorObj({});
+                    handleRemoveField(val, x);
+                  }, 5000);
+                } else {
+                  return '';
+                }
+              });
+            }}
             onChange={(e) => {
               const newField = val?.fields?.map((y) =>
                 y?.id === x?.id
@@ -82,7 +112,10 @@ const Category = ({ setData, data, val, index }) => {
               );
               setData(newArray);
             }}
-            inputCont={'removeBorder'}
+            inputCont={
+              errorObj.id === x.id ? 'removeBorder errorStyle' : 'removeBorder'
+            }
+            hasError={errorObj?.id === x?.id ? 'field already exists' : ''}
             rightIcon={
               <div
                 style={{
@@ -101,19 +134,7 @@ const Category = ({ setData, data, val, index }) => {
                   value={x?.type}
                   onChange={(id) => {
                     if (id === 'remove') {
-                      const newArray = data.map((item) =>
-                        item.id === val?.id
-                          ? {
-                              ...val,
-                              fields: [
-                                ...val?.fields.filter(
-                                  (y) => y?.label !== x?.label
-                                ),
-                              ],
-                            }
-                          : item
-                      );
-                      setData(newArray);
+                      handleRemoveField(val, x);
                     } else {
                       const newArray = data.map((item) =>
                         item.id === val?.id

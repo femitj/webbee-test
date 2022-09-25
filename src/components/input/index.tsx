@@ -16,6 +16,8 @@ interface InputProps {
   optionalLabelDiv?: any;
   type?: any;
   inputCont?: any;
+  onBlur?: any;
+  hasError?: string;
 }
 
 const Input = ({
@@ -33,6 +35,8 @@ const Input = ({
   optionalLabelDiv,
   type,
   inputCont,
+  onBlur,
+  hasError,
 }: InputProps) => {
   return (
     <Wrapper leftIcon={leftIcon} rightIcon={rightIcon}>
@@ -59,10 +63,12 @@ const Input = ({
               onChange={onChange}
               disabled={disabled}
               placeholder={placeholder}
+              onBlur={onBlur}
             />
             {rightIcon}
           </div>
         )}
+        {hasError && <h6 className='error-msg'>{hasError}</h6>}
       </div>
     </Wrapper>
   );
@@ -134,9 +140,9 @@ export const SelectInput = ({
           >
             <option value=''>{placeholder}</option>
             {options?.length
-              ? options.map((option: any) => (
+              ? options.map((option: any, index: any) => (
                   <option
-                    key={Math.random()}
+                    key={index}
                     value={
                       getValue
                         ? JSON.stringify(option)

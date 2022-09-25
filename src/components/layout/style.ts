@@ -75,6 +75,7 @@ export default styled.div`
       ul {
         margin-bottom: 20px;
         padding-top: 20px;
+        list-style: none;
         li {
           margin-bottom: 30px;
           color: white;

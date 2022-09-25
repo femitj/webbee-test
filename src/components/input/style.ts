@@ -36,7 +36,7 @@ const Wrapper = styled.div<WrapperProps>`
     }
     .inputBoxWrap {
       width: 100%;
-      border: 1px solid #e3e3e3;
+      border: 1px solid #ddd;
       border-radius: 8px;
       display: flex;
       align-items: center;
@@ -61,6 +61,10 @@ const Wrapper = styled.div<WrapperProps>`
         }
       }
     }
+  }
+
+  .error-msg {
+    color: red;
   }
 `;
 

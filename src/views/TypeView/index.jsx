@@ -52,7 +52,12 @@ const TypeView = () => {
             />
           ))}
         <div>
-          <Button background='blue' content='Add Item' onClick={handleNew} />
+          <Button
+            background='#a3a3a3'
+            outline='#a3a3a3'
+            content='Add Item'
+            onClick={handleNew}
+          />
         </div>
       </Wrapper>
     </Layout>
