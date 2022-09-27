@@ -1,41 +1,28 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import {
+  deleteInventory,
+  removeInventoryField,
+  setInventoryField,
+  updateInventoryField,
+  updateInventoryItem,
+} from '../../store/reducer';
 import Input, { SelectInput } from '../input';
 
-const Category = ({ setData, data, val, index }) => {
-  const [errorObj, setErrorObj] = useState({});
+const Category = ({ val }) => {
+  const dispatch = useDispatch();
 
-  const handleNew = (val, newVal) => {
-    const newArray = data.map((item) =>
-      item.id === val?.id
-        ? {
-            ...val,
-            title: val?.fields[0],
-            fields: [
-              ...val?.fields,
-              {
-                type: newVal?.id,
-                label: '',
-                id: Math.random(),
-              },
-            ],
-          }
-        : item
+  const handleDelete = (id) => dispatch(deleteInventory(id));
+  const handleNewField = (val, newVal) =>
+    dispatch(setInventoryField({ item: val, newField: newVal }));
+  const handleRemoveField = (val, newVal) =>
+    dispatch(removeInventoryField({ item: val, fieldId: newVal.id }));
+  const handleUpdateField = (type, newVal, from) =>
+    dispatch(
+      updateInventoryField({ item: val, value: type, field: newVal, from })
     );
-    setData(newArray);
-  };
-  const handleDelete = (id) => setData(data?.filter((x) => x?.id !== id));
-
-  const handleRemoveField = (val, x) => {
-    const newArray = data.map((item) =>
-      item.id === val?.id
-        ? {
-            ...val,
-            fields: [...val?.fields.filter((y) => y?.id !== x?.id)],
-          }
-        : item
-    );
-    setData(newArray);
-  };
+  const handleUpdateItem = (value, from) =>
+    dispatch(updateInventoryItem({ item: val, value, from }));
 
   return (
     <div key={val?.id} className='form'>
@@ -49,12 +36,7 @@ const Category = ({ setData, data, val, index }) => {
         <Input
           label='Name'
           value={val.name}
-          onChange={(e) => {
-            const newArray = data.map((item) =>
-              item.id === val?.id ? { ...val, name: e.target.value } : item
-            );
-            setData(newArray);
-          }}
+          onChange={(e) => handleUpdateItem(e.target.value, 'name')}
         />
       </div>
       <div className='inputCont'>
@@ -63,12 +45,7 @@ const Category = ({ setData, data, val, index }) => {
           value={val?.title}
           options={val?.fields?.filter((x) => x?.label !== '')}
           labelName='label'
-          onChange={(x) => {
-            const newArray = data.map((item) =>
-              item.id === val?.id ? { ...val, title: x } : item
-            );
-            setData(newArray);
-          }}
+          onChange={(x) => handleUpdateItem(x, 'title')}
           getValue='label'
         />
       </div>
@@ -76,46 +53,7 @@ const Category = ({ setData, data, val, index }) => {
         <div key={index} className='inputCont'>
           <Input
             value={x?.label}
-            onBlur={(e) => {
-              return val?.fields.map((z) => {
-                if (
-                  z?.id !== x?.id &&
-                  z?.label === e.target.value &&
-                  z?.type === x?.type
-                ) {
-                  setErrorObj({ id: x?.id });
-                  return setTimeout(() => {
-                    setErrorObj({});
-                    handleRemoveField(val, x);
-                  }, 5000);
-                } else {
-                  return '';
-                }
-              });
-            }}
-            onChange={(e) => {
-              const newField = val?.fields?.map((y) =>
-                y?.id === x?.id
-                  ? {
-                      ...x,
-                      label: e.target.value,
-                    }
-                  : y
-              );
-              const newArray = data.map((item) =>
-                item.id === val?.id
-                  ? {
-                      ...val,
-                      fields: newField,
-                    }
-                  : item
-              );
-              setData(newArray);
-            }}
-            inputCont={
-              errorObj.id === x.id ? 'removeBorder errorStyle' : 'removeBorder'
-            }
-            hasError={errorObj?.id === x?.id ? 'field already exists' : ''}
+            onChange={(e) => handleUpdateField(e.target.value, x, 'label')}
             rightIcon={
               <div
                 style={{
@@ -136,23 +74,7 @@ const Category = ({ setData, data, val, index }) => {
                     if (id === 'remove') {
                       handleRemoveField(val, x);
                     } else {
-                      const newArray = data.map((item) =>
-                        item.id === val?.id
-                          ? {
-                              ...val,
-                              fields: [
-                                ...val?.fields.filter(
-                                  (y) => y?.label !== x?.label
-                                ),
-                                {
-                                  ...x,
-                                  type: id,
-                                },
-                              ],
-                            }
-                          : item
-                      );
-                      setData(newArray);
+                      handleUpdateField(id, x);
                     }
                   }}
                 />
@@ -184,7 +106,7 @@ const Category = ({ setData, data, val, index }) => {
             value=''
             placeholder='Add Field'
             inputClassName='btnClass'
-            onChange={(item) => handleNew(val, item)}
+            onChange={(item) => handleNewField(val, item)}
             getValue
           />
         </div>

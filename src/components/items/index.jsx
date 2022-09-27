@@ -1,21 +1,20 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { setItems } from '../../store/reducer';
+import { setItems, updateItem } from '../../store/reducer';
 import Input, { CheckInput } from '../input';
 import Wrapper from './style';
 
 const Item = ({ item, category, items }) => {
   const dispatch = useDispatch();
   const setData = (val) => dispatch(setItems(val));
+  const handleUpdateItem = (value, from) =>
+    dispatch(updateItem({ item, value, from }));
   const handleDelete = (id) => setData(items?.filter((x) => x?.id !== id));
 
   return (
     <Wrapper>
       <div className='header'>
-        <div>
-          {item[category?.title?.label?.replace(/ /g, '')]?.toString() ||
-            category?.name}
-        </div>
+        <div>{item[category?.title?.id]?.toString() || category?.name}</div>
         <div onClick={() => handleDelete(item?.id)} className='delBtn'>
           x
         </div>
@@ -27,17 +26,9 @@ const Item = ({ item, category, items }) => {
               <Input
                 label={cat?.label}
                 type='text'
-                value={item[[cat?.label?.replace(/ /g, '')]]}
+                value={item[cat?.id]}
                 onChange={(e) => {
-                  const newVal = items?.map((y) =>
-                    y?.id === item?.id
-                      ? {
-                          ...item,
-                          [cat?.label?.replace(/ /g, '')]: e.target.value,
-                        }
-                      : y
-                  );
-                  setData(newVal);
+                  handleUpdateItem(e.target.value, [cat?.id]);
                 }}
               />
             </div>
@@ -45,21 +36,12 @@ const Item = ({ item, category, items }) => {
             <div className='inputCont' key={index}>
               <CheckInput
                 label={cat?.label}
-                checked={item[[cat?.label?.replace(/ /g, '')]]}
+                checked={item[[cat?.id]]}
                 onChange={(e) => {
-                  const newVal = items?.map((y) =>
-                    y?.id === item?.id
-                      ? {
-                          ...item,
-                          [cat?.label?.replace(/ /g, '')]:
-                            Boolean(item[[cat?.label?.replace(/ /g, '')]]) ===
-                            true
-                              ? false
-                              : true,
-                        }
-                      : y
+                  handleUpdateItem(
+                    Boolean(item[[cat?.id]]) === true ? false : true,
+                    [cat?.id]
                   );
-                  setData(newVal);
                 }}
               />
             </div>
@@ -68,17 +50,9 @@ const Item = ({ item, category, items }) => {
               <Input
                 label={cat?.label}
                 type='date'
-                value={item[[cat?.label?.replace(/ /g, '')]] || new Date()}
+                value={item[[cat?.id]] || new Date()}
                 onChange={(e) => {
-                  const newVal = items?.map((y) =>
-                    y?.id === item?.id
-                      ? {
-                          ...item,
-                          [cat?.label?.replace(/ /g, '')]: e.target.value,
-                        }
-                      : y
-                  );
-                  setData(newVal);
+                  handleUpdateItem(e.target.value, [cat?.id]);
                 }}
               />
             </div>
@@ -87,17 +61,9 @@ const Item = ({ item, category, items }) => {
               <Input
                 label={cat?.label}
                 type='number'
-                value={item[[cat?.label?.replace(/ /g, '')]]}
+                value={item[[cat?.id]]}
                 onChange={(e) => {
-                  const newVal = items?.map((y) =>
-                    y?.id === item?.id
-                      ? {
-                          ...item,
-                          [cat?.label?.replace(/ /g, '')]: e.target.value,
-                        }
-                      : y
-                  );
-                  setData(newVal);
+                  handleUpdateItem(e.target.value, [cat?.id]);
                 }}
               />
             </div>

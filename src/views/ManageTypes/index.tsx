@@ -3,7 +3,7 @@ import Wrapper from './styles';
 import Button from '../../components/button';
 import Category from '../../components/category/category';
 import { useDispatch, useSelector } from 'react-redux';
-import { setInventory } from '../../store/reducer';
+import { setNewInventory } from '../../store/reducer';
 import Layout from '../../components/layout';
 
 const Index = () => {
@@ -11,40 +11,20 @@ const Index = () => {
     (state: any) => state?.generalReducer
   );
   const dispatch = useDispatch();
-  const setData = (val: any) => dispatch(setInventory(val));
-
-  const handleCategory = () => {
-    const id = Math.random();
-
-    return setData([
-      ...data,
-      {
-        id: id,
-        name: ' ',
-        title: '',
-        fields: [],
-      },
-    ]);
-  };
+  const handleAddNew = () => dispatch(setNewInventory());
 
   return (
     <Layout>
       <Wrapper>
-        {data?.map((val: any, index: any) => (
-          <Category
-            key={val?.id}
-            val={val}
-            data={data}
-            setData={setData}
-            index={index}
-          />
+        {data?.map((val: any) => (
+          <Category key={val?.id} val={val} />
         ))}
 
         <div>
           <Button
             background='#a3a3a3'
             content='Add Category'
-            onClick={handleCategory}
+            onClick={handleAddNew}
             outline='#a3a3a3'
           />
         </div>
